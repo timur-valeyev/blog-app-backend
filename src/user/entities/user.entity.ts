@@ -10,7 +10,7 @@ export class UserEntity {
   @IsString()
   fullName: string
 
-  @Column()
+  @Column({unique: true})
   email: string
 
   @Column({nullable: true})
