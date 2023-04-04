@@ -9,6 +9,8 @@ import {PostEntity} from "./post/entities/post.entity";
 import { CommentModule } from './comment/comment.module';
 import {CommentEntity} from "./comment/entities/comment.entity";
 import { AuthModule } from "./auth/auth.module";
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -25,7 +27,11 @@ import { AuthModule } from "./auth/auth.module";
     AuthModule,
     UserModule,
     PostModule,
-    CommentModule
+    CommentModule,
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'uploads'),
+      serveRoot: '/uploads',
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],

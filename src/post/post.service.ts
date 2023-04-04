@@ -5,21 +5,34 @@ import {InjectRepository} from "@nestjs/typeorm";
 import {PostEntity} from "./entities/post.entity";
 import {Repository} from "typeorm";
 import {SearchPostDto} from "./dto/search-post.dto";
+import { v4 as uuid } from 'uuid';
+import * as path from 'path';
+import * as fs from 'fs';
 
 @Injectable()
 export class PostService {
   constructor(@InjectRepository(PostEntity) private repository: Repository<PostEntity>) {}
 
-  create(dto: CreatePostDto) {
-    return this.repository.save(dto)
+
+  async create(createPostDto: CreatePostDto, file): Promise<PostEntity> {
+    const { title, content } = createPostDto;
+
+    const imageUrl = `${uuid()}-${file.originalname}`;
+    const imagePath = path.join(__dirname, '..', '..', 'uploads', imageUrl);
+
+    fs.writeFileSync(imagePath, file.buffer);
+
+    const post = new PostEntity();
+    post.title = title;
+    post.content = content;
+    post.imageUrl = imageUrl;
+
+    return this.repository.save(post);
   }
 
-  findAll() {
-    return this.repository.find({
-      order: {
-        createdAt: 'DESC'
-      }
-    })
+
+  async findAll(): Promise<PostEntity[]> {
+    return this.repository.find();
   }
 
   async popular() {
