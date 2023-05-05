@@ -1,29 +1,42 @@
-import {Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn} from "typeorm";
-
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+} from 'typeorm';
+import { OutputBlockData } from '../dto/create-post.dto';
+import { UserEntity } from '../../user/entities/user.entity';
 
 @Entity('posts')
 export class PostEntity {
   @PrimaryGeneratedColumn()
-  id: number
+  id: number;
 
   @Column()
-  title: string
+  title: string;
 
-  @Column()
-  content: string
+  @Column({ type: 'jsonb' })
+  body: OutputBlockData[];
 
-  @Column({default: 0})
-  views: number
+  @ManyToOne(() => UserEntity, { eager: true })
+  user: UserEntity;
 
-  @Column({nullable: true})
-  tags?: string
+  @Column({
+    default: 0,
+  })
+  views: number;
 
   @Column({ nullable: true })
-  imageUrl?: string;
+  image: string;
 
-  @CreateDateColumn({type: 'timestamp'})
-  createdAt: Date
+  @Column({ nullable: true })
+  tags?: string;
 
-  @UpdateDateColumn({type: 'timestamp'})
-  updatedAt: Date
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updatedAt: Date;
 }

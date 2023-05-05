@@ -1,16 +1,14 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
-import {TypeOrmModule} from "@nestjs/typeorm";
-import {UserEntity} from "./user/entities/user.entity";
+import { UserEntity } from './user/entities/user.entity';
 import { PostModule } from './post/post.module';
-import {PostEntity} from "./post/entities/post.entity";
+import { PostEntity } from './post/entities/post.entity';
 import { CommentModule } from './comment/comment.module';
-import {CommentEntity} from "./comment/entities/comment.entity";
-import { AuthModule } from "./auth/auth.module";
-import { ServeStaticModule } from '@nestjs/serve-static';
-import { join } from 'path';
+import { CommentEntity } from './comment/entities/comment.entity';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -20,18 +18,14 @@ import { join } from 'path';
       port: 5432,
       username: 'postgres',
       password: 'postgres',
-      database: 'blog_db',
+      database: 'db_blog',
       entities: [UserEntity, PostEntity, CommentEntity],
       synchronize: true,
     }),
-    AuthModule,
     UserModule,
     PostModule,
     CommentModule,
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'uploads'),
-      serveRoot: '/uploads',
-    }),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

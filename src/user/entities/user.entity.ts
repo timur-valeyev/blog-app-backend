@@ -1,19 +1,41 @@
-import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
-import {IsString} from "class-validator";
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToMany,
+} from 'typeorm';
+import { CommentEntity } from '../../comment/entities/comment.entity';
 
 @Entity('users')
 export class UserEntity {
   @PrimaryGeneratedColumn()
-  id: number
+  id: number;
 
   @Column()
-  @IsString()
-  fullName: string
+  fullName: string;
 
-  @Column({unique: true})
-  email: string
+  @Column({
+    unique: true,
+  })
+  email: string;
 
-  @Column({nullable: true})
-  @IsString()
-  password?: string
+  @OneToMany(() => CommentEntity, (comment) => comment.user, {
+    eager: false,
+    nullable: true,
+  })
+  comments: CommentEntity[];
+
+  @Column({ nullable: true })
+  password?: string;
+
+  @Column({ nullable: true })
+  avatar: string;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updatedAt: Date;
 }
