@@ -103,20 +103,20 @@ export class PostService {
     return this.repository.save(post);
   }
 
-
   async update(id: number, dto: UpdatePostDto, userId: number) {
-    const find = await this.repository.findOne(+id);
+    const post = await this.repository.findOne(id);
 
-    if (!find) {
+    if (!post) {
       throw new NotFoundException('Статья не найдена');
     }
 
-    return this.repository.update(id, {
-      title: dto.title,
-      body: dto.body,
-      tags: dto.tags,
-      user: { id: userId }
-    });
+    const updatedPost = {
+      ...post,
+      ...dto,
+      user: { id: userId },
+    };
+
+    return this.repository.save(updatedPost);
   }
 
   async remove(id: number, userId: number) {

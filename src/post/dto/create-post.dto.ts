@@ -15,5 +15,5 @@ export class CreatePostDto {
   tags: string;
 
   @IsOptional()
-  image: any;
+  image?: any;
 }
