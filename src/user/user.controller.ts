@@ -1,14 +1,12 @@
 import {
   Controller,
   Get,
-  Post,
   Body,
   Patch,
   Param,
-  Delete,
   UseGuards,
   Request,
-  Query,
+  Query
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -33,7 +31,7 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Patch('me')
   update(@Request() req, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+req.user.id, updateUserDto);
+    return this.userService.update(req.user.id, updateUserDto);
   }
 
   @Get('search')
