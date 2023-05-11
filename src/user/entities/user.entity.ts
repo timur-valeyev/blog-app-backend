@@ -7,6 +7,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { CommentEntity } from '../../comment/entities/comment.entity';
+import { FriendshipEntity } from '../../friendship/entities/friendship.entity';
 
 @Entity('users')
 export class UserEntity {
@@ -32,6 +33,9 @@ export class UserEntity {
 
   @Column({ nullable: true })
   avatar: string;
+
+  @OneToMany(() => FriendshipEntity, (friendship) => friendship.user)
+  friendships: FriendshipEntity[];
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
