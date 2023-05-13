@@ -104,8 +104,10 @@ export class PostService {
       tags: dto.tags,
       user: { id: userId },
       image: dto.image,
-      categories: categories
+      categories: dto.categories
     };
+
+    console.log(post);
 
     return this.repository.save(post);
   }

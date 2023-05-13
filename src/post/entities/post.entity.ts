@@ -6,8 +6,8 @@ import {
   UpdateDateColumn,
   ManyToOne,
   ManyToMany,
-  JoinTable,
-} from 'typeorm';
+  JoinTable, JoinColumn
+} from "typeorm";
 import { OutputBlockData } from '../dto/create-post.dto';
 import { UserEntity } from '../../user/entities/user.entity';
 import { CategoryEntity } from '../../categories/entities/category.entity';
@@ -37,8 +37,7 @@ export class PostEntity {
   @Column({ nullable: true })
   tags?: string;
 
-  @ManyToMany(() => CategoryEntity)
-  @JoinTable()
+  @ManyToOne(() => CategoryEntity, { eager: true })
   categories: CategoryEntity[];
 
   @CreateDateColumn({ type: 'timestamp' })
