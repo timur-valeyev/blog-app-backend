@@ -16,4 +16,7 @@ export class CreatePostDto {
 
   @IsOptional()
   image?: any;
+
+  @IsOptional()
+  categories?: any;
 }

@@ -5,9 +5,12 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import { OutputBlockData } from '../dto/create-post.dto';
 import { UserEntity } from '../../user/entities/user.entity';
+import { CategoryEntity } from '../../categories/entities/category.entity';
 
 @Entity('posts')
 export class PostEntity {
@@ -33,6 +36,10 @@ export class PostEntity {
 
   @Column({ nullable: true })
   tags?: string;
+
+  @ManyToMany(() => CategoryEntity)
+  @JoinTable()
+  categories: CategoryEntity[];
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
