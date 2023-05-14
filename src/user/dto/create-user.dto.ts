@@ -1,4 +1,4 @@
-import {IsEmail, IsOptional, Length} from 'class-validator';
+import { IsEmail, IsOptional, Length } from 'class-validator';
 import { UniqueOnDatabase } from '../../auth/validations/UniqueValidation';
 import { UserEntity } from '../entities/user.entity';
 

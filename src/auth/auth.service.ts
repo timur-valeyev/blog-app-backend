@@ -42,7 +42,7 @@ export class AuthService {
         email: dto.email,
         fullName: dto.fullName,
         password: dto.password,
-        avatar: dto.avatar
+        avatar: dto.avatar,
       });
       return {
         ...userData,

@@ -9,15 +9,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PostEntity } from './entities/post.entity';
 import { SearchPostDto } from './dto/searchg-post.dto';
-import { CategoryEntity } from '../categories/entities/category.entity';
 
 @Injectable()
 export class PostService {
   constructor(
     @InjectRepository(PostEntity)
     private repository: Repository<PostEntity>,
-    @InjectRepository(CategoryEntity)
-    private categoryRepository: Repository<CategoryEntity>,
   ) {}
 
   findAll() {
@@ -96,22 +93,17 @@ export class PostService {
   }
 
   async create(dto: CreatePostDto, userId: number) {
-    const categories = dto.categories ? await this.categoryRepository.findByIds(dto.categories) : [];
-
     const post = {
       title: dto.title,
       body: dto.body,
       tags: dto.tags,
       user: { id: userId },
       image: dto.image,
-      categories: dto.categories
+      category: dto.category,
     };
-
-    console.log(post);
 
     return this.repository.save(post);
   }
-
 
   async update(id: number, dto: UpdatePostDto, userId: number) {
     const post = await this.repository.findOne(id);

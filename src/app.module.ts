@@ -9,10 +9,6 @@ import { PostEntity } from './post/entities/post.entity';
 import { CommentModule } from './comment/comment.module';
 import { CommentEntity } from './comment/entities/comment.entity';
 import { AuthModule } from './auth/auth.module';
-import { FriendshipModule } from './friendship/friendship.module';
-import { FriendshipEntity } from './friendship/entities/friendship.entity';
-import { CategoriesModule } from './categories/categories.module';
-import { CategoryEntity } from './categories/entities/category.entity';
 
 @Module({
   imports: [
@@ -23,21 +19,13 @@ import { CategoryEntity } from './categories/entities/category.entity';
       username: 'postgres',
       password: 'postgres',
       database: 'db_blog',
-      entities: [
-        UserEntity,
-        PostEntity,
-        CommentEntity,
-        FriendshipEntity,
-        CategoryEntity,
-      ],
+      entities: [UserEntity, PostEntity, CommentEntity],
       synchronize: true,
     }),
     UserModule,
     PostModule,
     CommentModule,
     AuthModule,
-    FriendshipModule,
-    CategoriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -12,4 +12,6 @@ export class UpdatePostDto extends PartialType(CreatePostDto) {
 
   @IsOptional()
   image?: any;
+
+  category: any;
 }
