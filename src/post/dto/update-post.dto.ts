@@ -1,17 +1,17 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreatePostDto, OutputBlockData } from './create-post.dto';
-import { IsOptional } from 'class-validator';
+import { PartialType } from '@nestjs/mapped-types'
+import { CreatePostDto, OutputBlockData } from './create-post.dto'
+import { IsOptional } from 'class-validator'
 
 export class UpdatePostDto extends PartialType(CreatePostDto) {
-  title: string;
+  title: string
 
-  body: OutputBlockData[];
-
-  @IsOptional()
-  tags: string;
+  body: OutputBlockData[]
 
   @IsOptional()
-  image?: any;
+  tags: string
 
-  category: any;
+  @IsOptional()
+  image?: any
+
+  category: any
 }

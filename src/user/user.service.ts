@@ -1,82 +1,90 @@
-import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from './entities/user.entity';
-import { Repository } from 'typeorm';
-import { LoginUserDto } from './dto/login-user.dto';
-import { SearchUserDto } from './dto/searchg-user.dto';
-import { CommentEntity } from '../comment/entities/comment.entity';
+import { Injectable } from '@nestjs/common'
+import { CreateUserDto } from './dto/create-user.dto'
+import { UpdateUserDto } from './dto/update-user.dto'
+import { LoginUserDto } from './dto/login-user.dto'
+import { SearchUserDto } from './dto/searchg-user.dto'
+import { PrismaService } from '../../prisma/prisma.service'
 
 @Injectable()
 export class UserService {
-  constructor(
-    @InjectRepository(UserEntity)
-    private repository: Repository<UserEntity>,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(dto: CreateUserDto) {
-    const user = {
-      email: dto.email,
-      password: dto.password,
-      fullName: dto.fullName,
-      avatar: dto.avatar,
-    };
-
-    return this.repository.save(user);
+    return this.prisma.user.create({
+      data: {
+        email: dto.email,
+        password: dto.password,
+        fullName: dto.fullName,
+        avatar: dto.avatar,
+      },
+    })
   }
 
   async findAll() {
-    const arr = await this.repository
-      .createQueryBuilder('u')
-      .leftJoinAndMapMany(
-        'u.comments',
-        CommentEntity,
-        'comment',
-        'comment.userId = u.id',
-      )
-      .loadRelationCountAndMap('u.commentsCount', 'u.comments', 'comments')
-      .getMany();
+    const users = await this.prisma.user.findMany({
+      include: {
+        _count: {
+          select: { comments: true },
+        },
+      },
+    })
 
-    return arr.map((obj) => {
-      delete obj.comments;
-      return obj;
-    });
+    return users.map((user) => ({
+      ...user,
+      commentsCount: user._count.comments,
+    }))
   }
 
-  findById(id: number) {
-    return this.repository.findOne(id);
+  async findById(id: number) {
+    return this.prisma.user.findUnique({
+      where: { id },
+    })
   }
 
-  findByCond(cond: LoginUserDto) {
-    return this.repository.findOne(cond);
+  async findByCond(cond: LoginUserDto) {
+    return this.prisma.user.findFirst({
+      where: {
+        email: cond.email,
+        password: cond.password,
+      },
+    })
   }
 
-  update(id: number, dto: UpdateUserDto) {
-    return this.repository.update(id, dto);
+  async update(id: number, dto: UpdateUserDto) {
+    return this.prisma.user.update({
+      where: { id },
+      data: {
+        ...dto,
+      },
+    })
   }
 
   async search(dto: SearchUserDto) {
-    const qb = this.repository.createQueryBuilder('u');
-
-    qb.limit(dto.limit || 0);
-    qb.take(dto.take || 10);
+    const where: any = {}
 
     if (dto.fullName) {
-      qb.andWhere(`u.fullName ILIKE :fullName`);
+      where.fullName = {
+        contains: dto.fullName,
+        mode: 'insensitive',
+      }
     }
 
     if (dto.email) {
-      qb.andWhere(`u.email ILIKE :email`);
+      where.email = {
+        contains: dto.email,
+        mode: 'insensitive',
+      }
     }
 
-    qb.setParameters({
-      email: `%${dto.email}%`,
-      fullName: `%${dto.fullName}%`,
-    });
+    const [items, total] = await Promise.all([
+      this.prisma.user.findMany({
+        where,
+        skip: dto.limit || 0,
+        take: dto.take || 10,
+      }),
+      this.prisma.user.count({ where }),
+    ])
 
-    const [items, total] = await qb.getManyAndCount();
-
-    return { items, total };
+    return { items, total }
   }
 }

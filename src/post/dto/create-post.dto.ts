@@ -1,22 +1,22 @@
-import { IsOptional } from 'class-validator';
+import { IsOptional } from 'class-validator'
 
 export interface OutputBlockData {
-  id?: string;
-  type: any;
-  data: any;
+  id?: string
+  type: any
+  data: any
 }
 
 export class CreatePostDto {
-  title: string;
+  title: string
 
-  body: OutputBlockData[];
-
-  @IsOptional()
-  tags: string;
+  body: OutputBlockData[]
 
   @IsOptional()
-  image?: any;
+  tags: string
 
   @IsOptional()
-  category: any;
+  image?: any
+
+  @IsOptional()
+  category: any
 }
