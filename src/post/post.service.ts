@@ -58,9 +58,6 @@ export class PostService {
 
     const posts = await this.prisma.post.findMany({
       where,
-      orderBy: dto.views ? { views: dto.views } : { createdAt: 'desc' },
-      skip: dto.limit || 0,
-      take: dto.take || 10,
       include: {
         user: true,
       },

@@ -9,7 +9,7 @@ export interface OutputBlockData {
 export class CreatePostDto {
   title: string
 
-  body: OutputBlockData[]
+  body: any
 
   @IsOptional()
   tags: string
